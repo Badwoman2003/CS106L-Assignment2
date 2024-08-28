@@ -1,2 +1,10 @@
 Assignment 3: STL HashMap (short answer questions)
-Names:
+Names:Badwoman
+1.at() vs []
+the implementation of operator[] allows user to modify the HashMap thats why it should not be overloaded by const
+2.Find vs std::Find
+the HashMap::Find uses native loop for searching while std::Find uses red-black tree searching,appearently one is O(n) and the other is O(logn)
+3.RAII?
+when calling ~HashMap() we use clear() which is RAII-compliant
+4.Increments
+it could be explain by C++ primer:"To solve this problem, the postfix versions take an extra (unused) parameter of type int."

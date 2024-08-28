@@ -20,6 +20,29 @@ HashMap<K, M, H>::~HashMap()
 }
 
 template <typename K, typename M, typename H>
+HashMap<K, M, H>::HashMap(const HashMap &HP)
+{
+    for (const auto &[key, value] : HP)
+    {
+        this->insert(std::make_pair(key, value));
+    }
+    return *this;
+}
+
+template <typename K, typename M, typename H>
+HashMap<K, M, H>::HashMap(const HashMap &&HP)
+{
+    _size = std::move(HP._size);
+    _hash_function = std::move(HP._hash_function);
+    for (size_t i = 0; i < HP.bucket_count; i++)
+    {
+        _buckets_array[i] = std::move(HP._buckets_array[i]);
+        HP._buckets_array[i] = nullptr;
+    }
+    HP._size = 0;
+}
+
+template <typename K, typename M, typename H>
 inline size_t HashMap<K, M, H>::size() const
 {
     return _size;
@@ -278,6 +301,37 @@ template <typename K, typename M, typename H>
 M &HashMap<K, M, H>::operator[](const K &key)
 {
     return insert({key, {}}).first->second;
+}
+
+template <typename K, typename M, typename H>
+HashMap<K, M, H> &HashMap<K, M, H>::operator=(const HashMap<K, M, H> &HP)
+{
+    if (*this == HP)
+        return (*this);
+    clear();
+    for (auto &node : HP)
+    {
+        auto [key, value] = node;
+        this->insert(std::make_pair(key, value));
+    }
+    return *this;
+}
+
+template <typename K, typename M, typename H>
+HashMap<K, M, H> &HashMap<K, M, H>::operator=(const HashMap<K, M, H> &&HP)
+{
+    if (*this == HP)
+        return (*this);
+    clear();
+    _size = std::move(HP._size);
+    _hash_function = std::move(HP._hash_function);
+    for (size_t i = 0; i < HP.bucket_count; i++)
+    {
+        _buckets_array[i] = std::move(HP._buckets_array[i]);
+        HP._buckets_array[i] = nullptr;
+    }
+    HP._size = 0;
+    return *this;
 }
 
 template <typename K, typename M, typename H>
